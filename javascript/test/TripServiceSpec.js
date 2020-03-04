@@ -5,8 +5,15 @@ let TripService = require('../src/TripService');
 
 describe('TripService', () => {
 
-    it('should... ', () => {
-        assert.equal(2+2, 5);
+    it('shouldThrowExceptionWhenUserIsNotLoggedIn', () => {
+        const service = new TripServiceUnderTest();
+        assert.throws(() => service.getTripsByUser(), Error, 'User not logged in.');
     });
 
 });
+
+class TripServiceUnderTest extends TripService{
+    getLoggedUser(){
+        return null;
+    }
+}
