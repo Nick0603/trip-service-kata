@@ -2,6 +2,7 @@
 
 let assert = require('assert');
 let TripService = require('../src/TripService');
+let User = require('../src/User');
 
 describe('TripService', () => {
 
@@ -10,10 +11,27 @@ describe('TripService', () => {
         assert.throws(() => service.getTripsByUser(), Error, 'User not logged in.');
     });
 
+    it('shouldNotReturnTripsWhenLoggedUserIsNotAFriend' , () => {
+        const expected = [];
+        const noAnyFriendUser = new User();
+        const service = new TripServiceUnderTest({loggedUser: 'userId'});
+        const actual = service.getTripsByUser(noAnyFriendUser);
+        assert.deepEqual(actual, expected);
+    })
 });
 
 class TripServiceUnderTest extends TripService{
+    constructor({loggedUser, trips} = {}){
+        super();
+        this.loggedUser = loggedUser || null;
+        this.trips = trips || ['trips']
+    }
+
     getLoggedUser(){
-        return null;
+        return this.loggedUser;
+    }
+
+    getTrips(){
+        return this.trips;
     }
 }
