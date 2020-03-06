@@ -18,6 +18,14 @@ describe('TripService', () => {
         const actual = service.getTripsByUser(noAnyFriendUser);
         assert.deepEqual(actual, expected);
     })
+
+    it('shouldReturnTripsWhenLoggedUserIsAFriend', () => {
+        const expected = ['trip1', 'trip2', 'trip3'];
+        const withFriendUser = new User('dummyName', [], ['userId']);
+        const service = new TripServiceUnderTest({loggedUser: 'userId', trips: expected});
+        const actual = service.getTripsByUser(withFriendUser);
+        assert.deepEqual(actual, expected);
+    })
 });
 
 class TripServiceUnderTest extends TripService{
