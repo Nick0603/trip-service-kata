@@ -7,16 +7,11 @@ class TripService {
     }
 
     getTripsByUser(user) {
-        let tripList = [];
         let loggedUser = this.userSession.getLoggedUser();
         if (loggedUser == null) {
             throw new Error('User not logged in.');
         }
-        let isFriend = user.isFriendWith(loggedUser)
-        if (isFriend) {
-            tripList = this.tripDAO.findTripsByUser(user);
-        }
-        return tripList;
+        return user.isFriendWith(loggedUser) ? this.tripDAO.findTripsByUser(user) : [];
     }
 }
 
