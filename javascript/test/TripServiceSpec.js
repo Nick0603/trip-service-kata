@@ -1,6 +1,8 @@
 "use strict";
 
 let assert = require('assert');
+let TripDAO = require('../src/TripDAO');
+let UserSession = require('../src/UserSession');
 let TripService = require('../src/TripService');
 let User = require('../src/User');
 let Trip = require('../src/Trip');
@@ -13,11 +15,12 @@ const WITH_FRIEND_USER = new User('Nick');
 WITH_FRIEND_USER.addFriend(LOGINNED_USER);
 
 describe('TripService', () => {
-
     it('shouldThrowExceptionWhenUserIsNotLoggedIn', () => {
         // Setup
-        const service = new TripService();
-        service.getLoggedUser = () => NOT_LOGIN_USER;
+        const userSession = UserSession;
+        const tripDAO = TripDAO;
+        userSession.getLoggedUser = () => NOT_LOGIN_USER;
+        const service = new TripService({userSession, tripDAO});
 
         // Exercise
         // Verify
@@ -27,9 +30,11 @@ describe('TripService', () => {
     it('shouldNotReturnTripsWhenLoggedUserIsNotAFriend' , () => {
         // Setup
         const expected = [];
-        const service = new TripService();
-        service.getLoggedUser = () => LOGINNED_USER;
-        service.getTrips = () => USER_TRIP_DATA;
+        const userSession = UserSession;
+        const tripDAO = TripDAO;
+        userSession.getLoggedUser = () => LOGINNED_USER;
+        tripDAO.findTripsByUser = () => USER_TRIP_DATA;
+        const service = new TripService({userSession, tripDAO});
         assert.notDeepEqual(expected, USER_TRIP_DATA);
         // Exercise
         const actual = service.getTripsByUser(NO_FRIEND_USER);
@@ -40,9 +45,11 @@ describe('TripService', () => {
     it('shouldReturnTripsWhenLoggedUserIsAFriend', () => {
         // Setup
         const expected = USER_TRIP_DATA;
-        const service = new TripService();
-        service.getLoggedUser = () => LOGINNED_USER;
-        service.getTrips = () => USER_TRIP_DATA;
+        const userSession = UserSession;
+        const tripDAO = TripDAO;
+        userSession.getLoggedUser = () => LOGINNED_USER;
+        tripDAO.findTripsByUser = () => USER_TRIP_DATA;
+        const service = new TripService({userSession, tripDAO});
         // Exercise
         const actual = service.getTripsByUser(WITH_FRIEND_USER);
         // Verify
