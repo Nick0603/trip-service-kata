@@ -18,4 +18,8 @@ module.exports = class User {
   addTrip(trip) {
     this.trips.add(trip);
   }
+
+  isFriendWith(user) {
+    return this.friends.includes(user);
+  }
 };
