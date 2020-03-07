@@ -1,9 +1,11 @@
 "use strict";
 
-let UserSession = require('./UserSession');
-let TripDAO = require('./TripDAO');
-
 class TripService {
+    constructor({userSession, tripDAO} = {}){
+        this.userSession = userSession;
+        this.tripDAO = tripDAO;
+    }
+
     getTripsByUser(user) {
         let tripList = [];
         let loggedUser = this.getLoggedUser();
@@ -26,11 +28,11 @@ class TripService {
     }
 
     getLoggedUser(){
-        return UserSession.getLoggedUser();
+        return this.userSession.getLoggedUser();
     }
 
     getTrips(user){
-        return TripDAO.findTripsByUser(user);
+        return this.tripDAO.findTripsByUser(user);
     }
 }
 
